@@ -44,7 +44,6 @@ class RainTypeImpl: BaseType {
                 getRandom(dp2px(5f), dp2px(9f)),
                 getRandom(20, 100)
             )
-
             mRains?.add(rain)
         }
     }
