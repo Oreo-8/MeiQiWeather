@@ -15,6 +15,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import com.example.meiqiweather.adapter.ViewPagerAdapter
 import com.example.meiqiweather.customizeView.RainTypeImpl
+import com.example.meiqiweather.customizeView.SnowTypeImpl
 import com.example.meiqiweather.data.FragmentWeatherData
 import com.example.meiqiweather.fragment.WeatherFragment
 import com.google.gson.Gson

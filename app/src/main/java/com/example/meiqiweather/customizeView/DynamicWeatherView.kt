@@ -45,12 +45,12 @@ class DynamicWeatherView: SurfaceView, SurfaceHolder.Callback  {
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
-        mDrawThread?.setRunning(false)
+        mDrawThread?.isRunning = false
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
         mDrawThread = DrawThread()
-        mDrawThread?.setRunning(true)
+        mDrawThread?.isRunning = true
         mDrawThread?.start()
     }
 
@@ -60,11 +60,7 @@ class DynamicWeatherView: SurfaceView, SurfaceHolder.Callback  {
     private inner class DrawThread : Thread() {
 
         // 用来停止线程的标记
-        private var isRunning = false
-
-        fun setRunning(running: Boolean) {
-            isRunning = running
-        }
+        var isRunning = false
 
         override fun run() {
             var canvas: Canvas?

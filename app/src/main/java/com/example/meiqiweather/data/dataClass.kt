@@ -1,9 +1,6 @@
 package com.example.meiqiweather.data
 
 import java.io.Serializable
-import android.support.design.widget.AppBarLayout
-
-
 
 data class Data(val dateTitle: String, val dateImage: Int, val dateBackground: Int)
 
