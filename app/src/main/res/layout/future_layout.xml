@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:orientation="horizontal"
+              android:layout_marginTop="10dp"
+              android:layout_height="wrap_content">
+
+    <LinearLayout style="@style/future_layout">
+
+        <TextView
+                android:id="@+id/day_1"
+                style="@style/future_layout_text"
+                android:text="今天"/>
+
+        <TextView
+                android:id="@+id/date_1"
+                style="@style/future_layout_text"/>
+
+        <ImageView
+                android:id="@+id/icon_1"
+                style="@style/future_layout_image"/>
+
+        <TextView
+                android:id="@+id/situation_1"
+                style="@style/future_layout_text"/>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/future_layout">
+
+        <TextView
+                android:id="@+id/day_2"
+                style="@style/future_layout_text"/>
+
+        <TextView
+                android:id="@+id/date_2"
+                style="@style/future_layout_text"/>
+
+        <ImageView
+                android:id="@+id/icon_2"
+                style="@style/future_layout_image"/>
+
+        <TextView
+                android:id="@+id/situation_2"
+                style="@style/future_layout_text"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/future_layout">
+
+        <TextView
+                android:id="@+id/day_3"
+                style="@style/future_layout_text"/>
+
+        <TextView
+                android:id="@+id/date_3"
+                style="@style/future_layout_text"/>
+
+        <ImageView
+                android:id="@+id/icon_3"
+                style="@style/future_layout_image"/>
+
+        <TextView
+                android:id="@+id/situation_3"
+                style="@style/future_layout_text"/>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/future_layout">
+
+        <TextView
+                android:id="@+id/day_4"
+                style="@style/future_layout_text"/>
+
+        <TextView
+                android:id="@+id/date_4"
+                style="@style/future_layout_text"/>
+
+        <ImageView
+                android:id="@+id/icon_4"
+                style="@style/future_layout_image"/>
+
+        <TextView
+                android:id="@+id/situation_4"
+                style="@style/future_layout_text"/>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/future_layout">
+
+        <TextView
+                android:id="@+id/day_5"
+                style="@style/future_layout_text"/>
+
+        <TextView
+                android:id="@+id/date_5"
+                style="@style/future_layout_text"/>
+
+        <ImageView
+                android:id="@+id/icon_5"
+                style="@style/future_layout_image"/>
+
+        <TextView
+                android:id="@+id/situation_5"
+                style="@style/future_layout_text"/>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/future_layout">
+
+        <TextView
+                android:id="@+id/day_6"
+                style="@style/future_layout_text"/>
+
+        <TextView
+                android:id="@+id/date_6"
+                style="@style/future_layout_text"/>
+
+        <ImageView
+                android:id="@+id/icon_6"
+                style="@style/future_layout_image"/>
+
+        <TextView
+                android:id="@+id/situation_6"
+                style="@style/future_layout_text"/>
+
+    </LinearLayout>
+
+</LinearLayout>

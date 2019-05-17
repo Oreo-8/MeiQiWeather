@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:padding="16dp"
+                  android:orientation="horizontal"
+                  android:layout_width="match_parent"
+                  android:gravity="center_vertical"
+                  android:layout_height="70dp">
+
+        <TextView
+                android:id="@+id/text_location"
+                style="@style/add_city_text"/>
+
+        <TextView
+                android:id="@+id/text_Parent_city"
+                style="@style/add_city_text"/>
+
+        <TextView
+                android:id="@+id/text_Admin_area"
+                style="@style/add_city_text"/>
+
+        <TextView
+                android:id="@+id/text_Cnty"
+                style="@style/add_city_text"/>
+
+    </LinearLayout>
+
+    <View style="@style/weather_view1" />
+
+</LinearLayout>
