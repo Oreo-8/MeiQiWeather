@@ -11,45 +11,6 @@ data class FragmentWeatherData(val city: String?, val tmp: String?, val happenin
 
 data class Elements(val up: Int, val down: Int)
 
-data class Line(var startx: Int = 0, var starty: Int  = 0, var stopx: Int  = 0, var stopy: Int = 0)
-
-data class Circle(var x: Int = 0, var y: Int = 0, var r: Int)
-
-abstract class AppBarLayoutStateChangeListener : AppBarLayout.OnOffsetChangedListener {
-    private var mCurrentState = State.INTERMEDIATE
-
-    enum class State {
-        EXPANDED, //展开
-        COLLAPSED, //折叠
-        INTERMEDIATE//中间状态
-    }
-
-    override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-        when {
-            verticalOffset == 0 -> {
-                if (mCurrentState != State.EXPANDED) {
-                    onStateChanged(appBarLayout, State.EXPANDED)
-                }
-                mCurrentState = State.EXPANDED
-            }
-            Math.abs(verticalOffset) >= appBarLayout.totalScrollRange -> {
-                if (mCurrentState != State.COLLAPSED) {
-                    onStateChanged(appBarLayout, State.COLLAPSED)
-                }
-                mCurrentState = State.COLLAPSED
-            }
-            else -> {
-                if (mCurrentState != State.INTERMEDIATE) {
-                    onStateChanged(appBarLayout, State.INTERMEDIATE)
-                }
-                mCurrentState = State.INTERMEDIATE
-            }
-        }
-    }
-
-    abstract fun onStateChanged(appBarLayout: AppBarLayout, state: State)
-}
-
 data class DailyForecast(val tmp_max: String, val tmp_min: String, val cond_code_d: String, val cond_txt_d: String, val date: String): Serializable
 
 data class Now(val tmp: String, val cond_txt: String, val cond_code: String, val hum: String, val pres: String,
