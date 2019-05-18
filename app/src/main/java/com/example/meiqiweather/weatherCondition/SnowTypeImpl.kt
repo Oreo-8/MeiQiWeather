@@ -1,4 +1,4 @@
-package com.example.meiqiweather.customizeView
+package com.example.meiqiweather.weatherCondition
 
 import android.content.Context
 import android.graphics.Canvas
@@ -7,17 +7,17 @@ import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import com.example.meiqiweather.R
+import com.example.meiqiweather.customizeView.BaseType
+import com.example.meiqiweather.customizeView.DynamicWeatherView
 
 class SnowTypeImpl: BaseType {
 
     // 背景
     private var mBackground: Drawable? = null
-    // 雨滴集合
+    // 雪滴集合
     private var mRains: ArrayList<SnowHolder>? = null
     // 画笔
     private var mPaint: Paint? = null
-
-    private var r: SnowHolder? = null
 
     constructor(context: Context, dynamicWeatherView: DynamicWeatherView): super(context, dynamicWeatherView){
         init()
@@ -50,16 +50,14 @@ class SnowTypeImpl: BaseType {
         // 画背景
         mBackground?.draw(canvas)
         // 画出集合中的雪点
-        for (i in 0 until mRains?.size!!) {
-            r = mRains!![i]
-            mPaint?.alpha = r!!.a
-            canvas.drawCircle(r!!.x.toFloat(), r!!.y.toFloat(), r!!.r.toFloat(), mPaint)
+        for (i in mRains!!) {
+            mPaint?.alpha = i.a
+            canvas.drawCircle(i.x.toFloat(), i.y.toFloat(), i.r.toFloat(), mPaint)
         }
-        for (i in 0 until mRains!!.size) {
-            r = mRains!![i]
-            r!!.y += r!!.s
-            if (r!!.y > mHeight) {
-                r!!.y = -r!!.s
+        for (i in mRains!!) {
+            i.y += i.s
+            if (i.y > mHeight) {
+                i.y = -i.s
             }
         }
     }

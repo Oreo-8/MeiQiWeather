@@ -4,25 +4,21 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:background="#00FFFFFF"
         android:id="@+id/main_SwipeRefresh"
-        android:fitsSystemWindows="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
     <android.support.design.widget.CoordinatorLayout
-            android:fitsSystemWindows="true"
             android:background="#00FFFFFF"
             android:layout_height="match_parent"
             android:layout_width="match_parent">
 
         <android.support.design.widget.AppBarLayout
-                android:fitsSystemWindows="true"
                 android:background="#00FFFFFF"
                 android:id="@+id/appBar"
                 android:layout_width="match_parent"
                 android:layout_height="600dp">
 
             <android.support.design.widget.CollapsingToolbarLayout
-                    android:fitsSystemWindows="true"
                     android:background="#00FFFFFF"
                     android:id="@+id/collapsing_toolbar"
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"

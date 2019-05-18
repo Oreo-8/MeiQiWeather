@@ -1,14 +1,14 @@
-package com.example.meiqiweather.customizeView
+package com.example.meiqiweather.weatherCondition
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import com.example.meiqiweather.R
+import com.example.meiqiweather.customizeView.BaseType
+import com.example.meiqiweather.customizeView.DynamicWeatherView
 
 class RainTypeImpl: BaseType {
 
@@ -22,8 +22,6 @@ class RainTypeImpl: BaseType {
     private var mRains: ArrayList<RainHolder>? = null
     // 画笔
     private var mPaint: Paint? = null
-
-    private var r: RainHolder? = null
 
     private fun init() {
         mPaint = Paint()
@@ -54,17 +52,15 @@ class RainTypeImpl: BaseType {
         // 画背景
         mBackground?.draw(canvas)
         // 画出集合中的雨点
-        for (i in 0 until mRains?.size!!) {
-            r = mRains!![i]
-            mPaint?.alpha = r!!.a
-            canvas.drawLine(r!!.x.toFloat(), r!!.y.toFloat(), r!!.x.toFloat(), (r!!.y + r!!.l).toFloat(), mPaint)
+        for (i in mRains!!) {
+            mPaint?.alpha = i.a
+            canvas.drawLine(i.x.toFloat(), i.y.toFloat(), i.x.toFloat(), (i.y + i.l).toFloat(), mPaint)
         }
         // 将集合中的点按自己的速度偏移
-        for (i in 0 until mRains!!.size) {
-            r = mRains!![i]
-            r!!.y += r!!.s
-            if (r!!.y > mHeight) {
-                r!!.y = -r!!.s
+        for (i in mRains!!) {
+            i.y += i.s
+            if (i.y > mHeight) {
+                i.y = -i.l
             }
         }
     }

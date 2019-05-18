@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
@@ -12,17 +14,20 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import com.example.meiqiweather.adapter.ViewPagerAdapter
-import com.example.meiqiweather.customizeView.RainTypeImpl
-import com.example.meiqiweather.customizeView.SnowTypeImpl
+import com.example.meiqiweather.weatherCondition.CloudyTypeImpl
 import com.example.meiqiweather.data.FragmentWeatherData
+import com.example.meiqiweather.data.Resource
 import com.example.meiqiweather.fragment.WeatherFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import interfaces.heweather.com.interfacesmodule.view.HeConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v4.content.ContextCompat as ContextCompat1
+
 
 class MainActivity : AppCompatActivity(){
 
@@ -52,12 +57,22 @@ class MainActivity : AppCompatActivity(){
         permissionJudge()
 
         //设置标题栏
+        val lp = toolbar.layoutParams as FrameLayout.LayoutParams
+        lp.setMargins(0, Resource.getStatusBarHeight(this), 0, 0)
+
         setSupportActionBar(toolbar)
         supportActionBar?.title = " "
 
-        dynamicWeatherView.mType =  RainTypeImpl(this, dynamicWeatherView)
-    }
+        if (Build.VERSION.SDK_INT >= 21) {
+            val decorView = window.decorView
+            val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            decorView.systemUiVisibility = option
+            window.statusBarColor = Color.TRANSPARENT
+        }
 
+
+        dynamicWeatherView.mType = CloudyTypeImpl(this, dynamicWeatherView)
+    }
 
     private fun init(){
         //清空 碎片集合
@@ -74,12 +89,8 @@ class MainActivity : AppCompatActivity(){
         main_ViewPager.adapter = adapter
 
         main_ViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
-            override fun onPageScrollStateChanged(p0: Int) {
-            }
-
-            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
-            }
-
+            override fun onPageScrollStateChanged(p0: Int) {}
+            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
 
             }

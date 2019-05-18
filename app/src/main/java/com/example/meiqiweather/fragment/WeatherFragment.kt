@@ -94,15 +94,14 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
                 when (state) {
                     State.EXPANDED -> {
                         v.main_SwipeRefresh.isEnabled = true
-//                        activity!!.rainView.visibility = View.VISIBLE
+                        activity!!.dynamicWeatherView.visibility = View.VISIBLE
                     }
                     State.COLLAPSED -> {
                         v.main_SwipeRefresh.isEnabled = false
-//                        activity!!.rainView.visibility = View.GONE
+                        activity!!.dynamicWeatherView.visibility = View.GONE
                     }
                     State.INTERMEDIATE -> {
                         v.main_SwipeRefresh.isEnabled = false
-//                        activity!!.rainView.visibility = View.GONE
                     }
                 }
             }

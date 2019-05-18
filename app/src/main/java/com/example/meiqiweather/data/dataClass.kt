@@ -8,7 +8,8 @@ data class FragmentWeatherData(val city: String?, val tmp: String?, val happenin
 
 data class Elements(val up: Int, val down: Int)
 
-data class DailyForecast(val tmp_max: String, val tmp_min: String, val cond_code_d: String, val cond_txt_d: String, val date: String): Serializable
+data class DailyForecast(val tmp_max: String, val tmp_min: String, val cond_code_d: String,
+                         val cond_txt_d: String, val date: String): Serializable
 
 data class Now(val tmp: String, val cond_txt: String, val cond_code: String, val hum: String, val pres: String,
                val wind_sc: String, val wind_dir: String): Serializable

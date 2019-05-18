@@ -33,8 +33,7 @@
                 android:name="com.amap.api.v2.apikey"
                 android:value="90e9d2990abc3753fa1f26ba36d1e160"/>
 
-        <activity android:name=".MainActivity"
-                  android:theme="@style/GoodTheme">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

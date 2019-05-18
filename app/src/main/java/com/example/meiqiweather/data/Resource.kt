@@ -1,5 +1,7 @@
 package com.example.meiqiweather.data
 
+import android.app.Activity
+import com.example.meiqiweather.MainActivity
 import com.example.meiqiweather.R
 
 class Resource {
@@ -46,6 +48,13 @@ class Resource {
             "cw" to Data("洗车指数", R.drawable.ic_cw, R.drawable.cw),
             "air" to Data("空气污染扩散条件指数", R.drawable.ic_air, R.drawable.air)
         ) }
+
+        fun getStatusBarHeight(activity: Activity): Int {
+            val resources = activity.resources
+            val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+            val height = resources.getDimensionPixelSize(resourceId)
+            return height
+        }
 
     }
 

@@ -2,6 +2,8 @@ package com.example.meiqiweather
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -9,7 +11,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.MenuItem
+import android.view.View
+import android.widget.LinearLayout
 import com.example.meiqiweather.adapter.AddCityAdapter
+import com.example.meiqiweather.data.Resource
 import interfaces.heweather.com.interfacesmodule.bean.Lang
 import interfaces.heweather.com.interfacesmodule.bean.basic.Basic
 import interfaces.heweather.com.interfacesmodule.bean.search.Search
@@ -23,8 +28,18 @@ class AddCityActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_add_city)
         //设置标题栏
+
+        val lp = addCity_toolbar.layoutParams as LinearLayout.LayoutParams
+        lp.setMargins(0, Resource.getStatusBarHeight(this), 0, 0)
         setSupportActionBar(addCity_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            val decorView = window.decorView
+            val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            decorView.systemUiVisibility = option
+            window.statusBarColor = Color.TRANSPARENT
+        }
 
         //键盘确定事件
         addCity_eText.setOnKeyListener { _, keyCode, event ->
