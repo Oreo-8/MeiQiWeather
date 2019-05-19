@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.PixelFormat
 import android.os.SystemClock
 import android.util.AttributeSet
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 
@@ -42,6 +43,7 @@ class DynamicWeatherView: SurfaceView, SurfaceHolder.Callback  {
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
+
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
@@ -52,6 +54,7 @@ class DynamicWeatherView: SurfaceView, SurfaceHolder.Callback  {
         mDrawThread = DrawThread()
         mDrawThread?.isRunning = true
         mDrawThread?.start()
+
     }
 
     /**

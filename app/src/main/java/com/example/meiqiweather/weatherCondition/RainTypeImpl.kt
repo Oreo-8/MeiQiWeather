@@ -10,6 +10,9 @@ import com.example.meiqiweather.R
 import com.example.meiqiweather.customizeView.BaseType
 import com.example.meiqiweather.customizeView.DynamicWeatherView
 
+/**
+ * 下雨
+ */
 class RainTypeImpl: BaseType {
 
     constructor(context: Context, dynamicWeatherView: DynamicWeatherView): super(context, dynamicWeatherView){

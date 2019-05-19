@@ -2,17 +2,16 @@ package com.example.meiqiweather.weatherCondition
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.RectF
+import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import com.example.meiqiweather.R
 import com.example.meiqiweather.customizeView.BaseType
 import com.example.meiqiweather.customizeView.DynamicWeatherView
-import android.graphics.Shader
-import android.graphics.RadialGradient
+
+/**
+ * 多云
+ */
 
 class CloudyTypeImpl: BaseType {
 
@@ -26,7 +25,9 @@ class CloudyTypeImpl: BaseType {
     private var paint: Paint? = null
 
     private var mRecF: RectF? = null
-    private var rect: RectF? = null
+
+    private var b: Bitmap? = null
+    private var i = 0
 
     constructor(context: Context, dynamicWeatherView: DynamicWeatherView): super(context, dynamicWeatherView){
         init()
@@ -45,12 +46,12 @@ class CloudyTypeImpl: BaseType {
         circleP?.alpha = 200
 
         paint = Paint()
-        paint?.strokeWidth = 20f
-        paint?.style = Paint.Style.STROKE
-        paint?.alpha = 50
+        paint?.alpha = 200
         paint?.isAntiAlias = true
-        paint?.color = Color.parseColor("#FFE500")
-        rect = RectF()
+
+
+        b = BitmapFactory.decodeResource(mContext?.resources, R.drawable.sun)
+
     }
 
     override fun generate() {
@@ -73,18 +74,23 @@ class CloudyTypeImpl: BaseType {
         clearCanvas(canvas)
         // 画背景
         mBackground?.draw(canvas)
-        canvas.drawCircle(mWidth.toFloat() - 260, 260f, 130f, circleP)
+
+        val matrix = Matrix()
+        matrix.postRotate(i++.toFloat())
+        val newBmp = Bitmap.createBitmap(b, 0, 0, b!!.width, b!!.height, matrix, true)
+        var k = newBmp.width - b!!.width
+        val bmp = Bitmap.createBitmap(newBmp, k / 2, k / 2, b!!.width, b!!.width)
+        canvas.drawBitmap(bmp, mWidth.toFloat() - 480f,30f, paint)
+
         for (i in mRains!!) {
             mPaint?.alpha = i.a
             mRecF?.set(i.l.toFloat(), -340f, i.r.toFloat(), i.b.toFloat() )
             canvas.drawArc(mRecF, 0f, 180F, true, mPaint)
         }
 
-//        rect?.set(mWidth.toFloat() - 400f, 120f , mWidth.toFloat() - 260 + 140f, 400f)
-//        canvas.drawArc(rect, 0f, 360f, false, paint)
-
-
     }
+
+
 
     /**
      * @param l 矩形左侧的X坐标

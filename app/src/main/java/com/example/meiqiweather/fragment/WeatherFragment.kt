@@ -21,6 +21,7 @@ import com.amap.api.location.AMapLocationListener
 import com.example.meiqiweather.R
 import com.example.meiqiweather.adapter.HourlyBaseAdapter
 import com.example.meiqiweather.data.*
+import com.example.meiqiweather.weatherCondition.ClearTypeImpl
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import interfaces.heweather.com.interfacesmodule.bean.weather.Weather
@@ -325,11 +326,13 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         }
 
         var time = java.sql.Timestamp(System.currentTimeMillis()).toString()
-        Log.d("good", time.substring(11,16))
+//        Log.d("good", time.substring(11,16))
 
         //显示组件
         v.fragment_linear.visibility = View.VISIBLE
         v.weather_relative.visibility = View.VISIBLE
+
+
     }
 
     //设置星期String

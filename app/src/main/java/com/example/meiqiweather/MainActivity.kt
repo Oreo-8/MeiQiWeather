@@ -12,19 +12,27 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.example.meiqiweather.adapter.ViewPagerAdapter
+import com.example.meiqiweather.customizeView.DynamicWeatherView
 import com.example.meiqiweather.weatherCondition.CloudyTypeImpl
 import com.example.meiqiweather.data.FragmentWeatherData
 import com.example.meiqiweather.data.Resource
+import com.example.meiqiweather.fragment.WeatherChoose
 import com.example.meiqiweather.fragment.WeatherFragment
+import com.example.meiqiweather.weatherCondition.ClearTypeImpl
+import com.example.meiqiweather.weatherCondition.OvercastTypeImpl
+import com.example.meiqiweather.weatherCondition.RainTypeImpl
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import interfaces.heweather.com.interfacesmodule.bean.weather.Weather
 import interfaces.heweather.com.interfacesmodule.view.HeConfig
+import interfaces.heweather.com.interfacesmodule.view.HeWeather
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v4.content.ContextCompat as ContextCompat1
 
@@ -70,8 +78,7 @@ class MainActivity : AppCompatActivity(){
             window.statusBarColor = Color.TRANSPARENT
         }
 
-
-        dynamicWeatherView.mType = CloudyTypeImpl(this, dynamicWeatherView)
+        dynamicWeatherView.mType = CloudyTypeImpl(this@MainActivity, dynamicWeatherView)
     }
 
     private fun init(){
@@ -92,7 +99,17 @@ class MainActivity : AppCompatActivity(){
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
+                var k = gson.fromJson<ArrayList<FragmentWeatherData>>(prefs.getString("dataList", null), type)
+                HeWeather.getWeather(this@MainActivity, k[p0].city, object : HeWeather.OnResultWeatherDataListBeansListener {
+                    override fun onSuccess(p0: Weather?) {
+                        dynamicWeatherView.mType = CloudyTypeImpl(this@MainActivity, dynamicWeatherView)
+                        dynamicWeatherView.visibility = View.GONE
+                        dynamicWeatherView.visibility = View.VISIBLE
+                    }
+                    override fun onError(p0: Throwable?) {
 
+                    }
+                })
             }
 
         })

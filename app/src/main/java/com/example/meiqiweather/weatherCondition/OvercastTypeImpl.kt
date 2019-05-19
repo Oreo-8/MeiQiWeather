@@ -11,6 +11,9 @@ import com.example.meiqiweather.R
 import com.example.meiqiweather.customizeView.BaseType
 import com.example.meiqiweather.customizeView.DynamicWeatherView
 
+/**
+ * 阴天
+ */
 class OvercastTypeImpl: BaseType {
 
     // 背景
