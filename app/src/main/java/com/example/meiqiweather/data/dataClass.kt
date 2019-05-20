@@ -24,5 +24,5 @@ data class Sun(val sr: String, val ss: String): Serializable
 
 data class Mweather(var now: Now? = null, var daily_forecast: ArrayList<DailyForecast> = ArrayList(),
                     var basic: Basic? = null, var hourly: ArrayList<Hourly>  = ArrayList(),
-                   var lifestyle: ArrayList<Lifestyle> = ArrayList(), var sun: Sun? = null): Serializable
+                   var lifestyle: ArrayList<Lifestyle> = ArrayList(), var sun: Sun? = null, var city: String): Serializable
 

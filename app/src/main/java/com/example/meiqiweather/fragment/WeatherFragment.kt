@@ -20,6 +20,7 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.example.meiqiweather.R
 import com.example.meiqiweather.adapter.HourlyBaseAdapter
+import com.example.meiqiweather.customizeView.DynamicWeatherView
 import com.example.meiqiweather.data.*
 import com.example.meiqiweather.weatherCondition.ClearTypeImpl
 import com.google.gson.Gson
@@ -43,8 +44,6 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
     var mTmp: String? = null
 
     var mHappening: String? = null
-
-    private var code: String? = null
 
     private var cityCode: String? = null
 
@@ -74,7 +73,7 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
 
     var mWeather: Mweather? = null
 
-    private var handler: Handler = @SuppressLint("HandlerLeak")
+    var handler: Handler = @SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message?) {
             mWeather = gson.fromJson<Mweather>(prefs.getString(msg!!.obj.toString(), null), type)
@@ -95,11 +94,11 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
                 when (state) {
                     State.EXPANDED -> {
                         v.main_SwipeRefresh.isEnabled = true
-                        activity!!.dynamicWeatherView.visibility = View.VISIBLE
+                        activity!!.frame.visibility = View.VISIBLE
                     }
                     State.COLLAPSED -> {
                         v.main_SwipeRefresh.isEnabled = false
-                        activity!!.dynamicWeatherView.visibility = View.GONE
+                        activity!!.frame.visibility = View.GONE
                     }
                     State.INTERMEDIATE -> {
                         v.main_SwipeRefresh.isEnabled = false
@@ -142,7 +141,6 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
                 if (weather != null) {
                     mTmp = weather.now?.tmp + "°"
                     mHappening = weather.now?.cond_txt
-                    code = weather.now?.cond_code
                     mCity = weather.basic?.location
                 }
             }
@@ -150,6 +148,7 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
             override fun onError(p0: Throwable?) = p0!!.printStackTrace()
         })
     }
+
 
     /**
      * 刷新天气
@@ -183,6 +182,8 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
                 storageJudgment(p0.adCode)
                 v.toolbar.setNavigationIcon(R.mipmap.ic_locate_city)
                 //停止定位
+                editor.putString("c", p0.adCode)
+                editor.apply()
                 mlocationClient?.stopLocation()
             }
         }else{
@@ -236,7 +237,7 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
                     }
 
 
-                    val mWeather = Mweather(now, daily_forecast, basic, hourly, lifestyle, sun)
+                    val mWeather = Mweather(now, daily_forecast, basic, hourly, lifestyle, sun, city)
 
                     val json = gson.toJson(mWeather)
                     editor.putString(city, json)
@@ -325,14 +326,9 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
             v.life_index_layout.life_layout.addView(l)
         }
 
-        var time = java.sql.Timestamp(System.currentTimeMillis()).toString()
-//        Log.d("good", time.substring(11,16))
-
         //显示组件
         v.fragment_linear.visibility = View.VISIBLE
         v.weather_relative.visibility = View.VISIBLE
-
-
     }
 
     //设置星期String

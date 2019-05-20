@@ -77,8 +77,6 @@ class MainActivity : AppCompatActivity(){
             decorView.systemUiVisibility = option
             window.statusBarColor = Color.TRANSPARENT
         }
-
-        dynamicWeatherView.mType = CloudyTypeImpl(this@MainActivity, dynamicWeatherView)
     }
 
     private fun init(){
@@ -95,23 +93,15 @@ class MainActivity : AppCompatActivity(){
         adapter = ViewPagerAdapter(supportFragmentManager, arrayList)
         main_ViewPager.adapter = adapter
 
+        WeatherChoose.weatherChoose( prefs.getString("c", null), this@MainActivity, frame)
+
         main_ViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
                 var k = gson.fromJson<ArrayList<FragmentWeatherData>>(prefs.getString("dataList", null), type)
-                HeWeather.getWeather(this@MainActivity, k[p0].city, object : HeWeather.OnResultWeatherDataListBeansListener {
-                    override fun onSuccess(p0: Weather?) {
-                        dynamicWeatherView.mType = CloudyTypeImpl(this@MainActivity, dynamicWeatherView)
-                        dynamicWeatherView.visibility = View.GONE
-                        dynamicWeatherView.visibility = View.VISIBLE
-                    }
-                    override fun onError(p0: Throwable?) {
-
-                    }
-                })
+                WeatherChoose.weatherChoose(k[p0].city, this@MainActivity, frame)
             }
-
         })
     }
 
