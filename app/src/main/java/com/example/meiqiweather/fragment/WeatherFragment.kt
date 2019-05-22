@@ -22,7 +22,7 @@ import com.example.meiqiweather.R
 import com.example.meiqiweather.adapter.HourlyBaseAdapter
 import com.example.meiqiweather.customizeView.DynamicWeatherView
 import com.example.meiqiweather.data.*
-import com.example.meiqiweather.weatherCondition.ClearTypeImpl
+import com.example.meiqiweather.fragment.WeatherChoose.Companion.choose
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import interfaces.heweather.com.interfacesmodule.bean.weather.Weather
@@ -46,6 +46,9 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
     var mHappening: String? = null
 
     private var cityCode: String? = null
+
+    private var isInit = false
+    private var isLoad = false
 
     constructor(cityCode: String): this(){
         this.cityCode = cityCode
@@ -73,7 +76,7 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
 
     var mWeather: Mweather? = null
 
-    var handler: Handler = @SuppressLint("HandlerLeak")
+    private var handler: Handler = @SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message?) {
             mWeather = gson.fromJson<Mweather>(prefs.getString(msg!!.obj.toString(), null), type)
@@ -84,6 +87,7 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.weather_fragment, container, false)
 
+        //里面开始对页面进行数据加载
         //设置刷新颜色与监听
         v.main_SwipeRefresh.setColorSchemeResources(R.color.colorPrimary)
         v.main_SwipeRefresh.setOnRefreshListener { refreshWeather() }
@@ -108,11 +112,10 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
 
         })
 
-
         //设置星期
         val dayText by lazy {
             arrayListOf<TextView>(v.future_layout.day_1,v.future_layout.day_2,
-            v.future_layout.day_3, v.future_layout.day_4, v.future_layout.day_5, v.future_layout.day_6)
+                v.future_layout.day_3, v.future_layout.day_4, v.future_layout.day_5, v.future_layout.day_6)
         }
         for (i in 1 until dayText.size)
             dayText[i].text = week(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)+i)
@@ -120,19 +123,69 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         v.toolbar.title = ""
         //设定位
 
-        if (cityCode != null){
-            storageJudgment(cityCode!!)
-            assignment(cityCode!!)
-        } else {
-            mlocationClient = AMapLocationClient(activity)
-            mLocationOption = AMapLocationClientOption()
-            mlocationClient?.setLocationListener(this)
-            mLocationOption?.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
-            mlocationClient?.setLocationOption(mLocationOption)
-            mlocationClient?.startLocation()
-        }
+        isInit = true
+        isCanLoadData()
 
         return v
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        isCanLoadData()
+    }
+
+      /**
+     * 是否可以加载数据
+     * 可以加载数据的条件：
+     * 1.视图已经初始化
+     * 2.视图对用户可见
+     */
+    private fun isCanLoadData() {
+        //视图没有初始化
+        if (!isInit) {
+            return
+        }
+        //判断视图对用户是否可见
+        if (userVisibleHint) {
+            lazyLoad()
+            isLoad = true
+        } else {
+            if (isLoad) {
+                stopLoad()
+            }
+        }
+    }
+
+      /**
+     * 当视图初始化并对用户可见的时候去真正的加载数据
+     */
+    private fun lazyLoad() {
+
+          if (cityCode != null){
+              storageJudgment(cityCode!!)
+              assignment(cityCode!!)
+          } else {
+              mlocationClient = AMapLocationClient(activity)
+              mLocationOption = AMapLocationClientOption()
+              mlocationClient?.setLocationListener(this)
+              mLocationOption?.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
+              mlocationClient?.setLocationOption(mLocationOption)
+              mlocationClient?.startLocation()
+          }
+
+    }
+
+    /**
+     * 当视图已经对用户不可见并且加载过数据，如果需要在切换到其他页面时停止加载数据，可以覆写此方法
+     */
+    private fun stopLoad() {
+      //让已经在加载过数据并不可见的页面停止加载（例如 视频播放时切换过去不可见时，要让它停止播放）
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        isInit = false
+        isLoad = false
     }
 
     private fun assignment(city: String){
@@ -182,8 +235,6 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
                 storageJudgment(p0.adCode)
                 v.toolbar.setNavigationIcon(R.mipmap.ic_locate_city)
                 //停止定位
-                editor.putString("c", p0.adCode)
-                editor.apply()
                 mlocationClient?.stopLocation()
             }
         }else{
@@ -237,11 +288,15 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
                     }
 
 
-                    val mWeather = Mweather(now, daily_forecast, basic, hourly, lifestyle, sun, city)
+                    val mWeather = Mweather(now, daily_forecast, basic, hourly, lifestyle, sun, weather.now.cond_code)
 
-                    val json = gson.toJson(mWeather)
+                    var json = gson.toJson(mWeather)
                     editor.putString(city, json)
                     editor.apply()
+
+
+//                    editor.putString("dataList", gson.toJson(mData))
+//                    editor.apply()
 
                     var message = Message()
                     message.obj = city
@@ -329,6 +384,14 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         //显示组件
         v.fragment_linear.visibility = View.VISIBLE
         v.weather_relative.visibility = View.VISIBLE
+
+        activity!!.frame.removeAllViews()
+        var dwv = DynamicWeatherView(context!!)
+        dwv.mType = choose(dwv, context!!, mWeather.cond_code)
+        activity!!.frame.addView(dwv)
+
+//        activity!!.dw_view.mType = choose(activity!!.dw_view, context!!, mWeather.cond_code)
+
     }
 
     //设置星期String

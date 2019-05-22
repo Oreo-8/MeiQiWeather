@@ -24,6 +24,7 @@ import com.example.meiqiweather.weatherCondition.CloudyTypeImpl
 import com.example.meiqiweather.data.FragmentWeatherData
 import com.example.meiqiweather.data.Resource
 import com.example.meiqiweather.fragment.WeatherChoose
+import com.example.meiqiweather.fragment.WeatherChoose.Companion.choose
 import com.example.meiqiweather.fragment.WeatherFragment
 import com.example.meiqiweather.weatherCondition.ClearTypeImpl
 import com.example.meiqiweather.weatherCondition.OvercastTypeImpl
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity(){
             decorView.systemUiVisibility = option
             window.statusBarColor = Color.TRANSPARENT
         }
+
     }
 
     private fun init(){
@@ -92,17 +94,7 @@ class MainActivity : AppCompatActivity(){
         }
         adapter = ViewPagerAdapter(supportFragmentManager, arrayList)
         main_ViewPager.adapter = adapter
-
-        WeatherChoose.weatherChoose( prefs.getString("c", null), this@MainActivity, frame)
-
-        main_ViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
-            override fun onPageScrollStateChanged(p0: Int) {}
-            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
-            override fun onPageSelected(p0: Int) {
-                var k = gson.fromJson<ArrayList<FragmentWeatherData>>(prefs.getString("dataList", null), type)
-                WeatherChoose.weatherChoose(k[p0].city, this@MainActivity, frame)
-            }
-        })
+        main_ViewPager.offscreenPageLimit = arrayList.size
     }
 
     /**

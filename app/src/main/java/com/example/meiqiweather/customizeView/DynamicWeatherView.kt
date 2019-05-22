@@ -2,12 +2,19 @@ package com.example.meiqiweather.customizeView
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.PixelFormat
+import android.os.Build
 import android.os.SystemClock
+import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.view.View
+import com.example.meiqiweather.customizeView.DynamicWeatherView.WeatherType
+
+
 
 class DynamicWeatherView: SurfaceView, SurfaceHolder.Callback  {
 
@@ -17,6 +24,7 @@ class DynamicWeatherView: SurfaceView, SurfaceHolder.Callback  {
     var mType: WeatherType? = null
     var mViewWidth: Int = 0
     var mViewHeight: Int = 0
+
 
     constructor(context: Context): this(context, null)
 
@@ -43,7 +51,6 @@ class DynamicWeatherView: SurfaceView, SurfaceHolder.Callback  {
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
@@ -69,7 +76,7 @@ class DynamicWeatherView: SurfaceView, SurfaceHolder.Callback  {
             var canvas: Canvas?
             // 无限循环绘制
             while (isRunning) {
-                if (mType != null && mViewWidth !== 0 && mViewHeight !== 0) {
+                if (mType != null && mViewWidth != 0 && mViewHeight != 0) {
                     canvas = mHolder?.lockCanvas()
                     if (canvas != null) {
                         mType?.onDraw(canvas)
