@@ -21,6 +21,7 @@ import android.widget.Toast
 import com.example.meiqiweather.adapter.CityAdapter
 import com.example.meiqiweather.data.FragmentWeatherData
 import com.example.meiqiweather.data.Resource
+import com.example.meiqiweather.fragment.WeatherFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import interfaces.heweather.com.interfacesmodule.bean.weather.now.Now
@@ -150,12 +151,13 @@ class CityManageActivity : AppCompatActivity() {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, p1: Int) {
             var pos = viewHolder.adapterPosition
             if (pos != 0) {
+                flag = true
+                editor.remove(mData[pos].city)
                 mData.removeAt(pos)
                 adapter.notifyItemRemoved(pos)
                 val json = gson.toJson(mData)
                 editor.putString("dataList", json)
                 editor.apply()
-                flag = true
             }
         }
 
@@ -170,7 +172,7 @@ class CityManageActivity : AppCompatActivity() {
             isCurrentlyActive: Boolean
         ) {
             if (viewHolder.adapterPosition != 0) {
-                if (actionState === ItemTouchHelper.ACTION_STATE_SWIPE) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                     //滑动时改变 Item 的透明度，以实现滑动过程中实现渐变效果
                     val alpha = 1 - Math.abs(dX) / viewHolder.itemView.width.toFloat()
                     viewHolder.itemView.alpha = alpha

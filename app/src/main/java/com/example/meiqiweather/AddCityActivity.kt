@@ -41,6 +41,10 @@ class AddCityActivity : AppCompatActivity() {
             window.statusBarColor = Color.TRANSPARENT
         }
 
+        addCity_eText.isFocusable = true
+        addCity_eText.isFocusableInTouchMode = true
+        addCity_eText.requestFocus()
+
         //键盘确定事件
         addCity_eText.setOnKeyListener { _, keyCode, event ->
             if (KeyEvent.KEYCODE_ENTER == keyCode && event.action == KeyEvent.ACTION_DOWN) {
@@ -80,10 +84,12 @@ class AddCityActivity : AppCompatActivity() {
                     //将数据传入显示列表
                     val layoutManager = LinearLayoutManager(this@AddCityActivity)
                     add_list.layoutManager = layoutManager
-                    var adapter = AddCityAdapter(p0.basic)
-                    add_list.adapter = adapter
-                    //列表回调事件
-                    adapter.setOnItemClickListener(itemClickListener)
+                    if (p0.basic != null){
+                        var adapter = AddCityAdapter(p0.basic)
+                        add_list.adapter = adapter
+                        //列表回调事件
+                        adapter.setOnItemClickListener(itemClickListener)
+                    }
                 }
             }
 

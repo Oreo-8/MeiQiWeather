@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
@@ -18,24 +17,19 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
+import com.baidu.tts.client.SpeechError
 import com.example.meiqiweather.adapter.ViewPagerAdapter
-import com.example.meiqiweather.customizeView.DynamicWeatherView
-import com.example.meiqiweather.weatherCondition.CloudyTypeImpl
 import com.example.meiqiweather.data.FragmentWeatherData
 import com.example.meiqiweather.data.Resource
-import com.example.meiqiweather.fragment.WeatherChoose
-import com.example.meiqiweather.fragment.WeatherChoose.Companion.choose
 import com.example.meiqiweather.fragment.WeatherFragment
-import com.example.meiqiweather.weatherCondition.ClearTypeImpl
-import com.example.meiqiweather.weatherCondition.OvercastTypeImpl
-import com.example.meiqiweather.weatherCondition.RainTypeImpl
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import interfaces.heweather.com.interfacesmodule.bean.weather.Weather
 import interfaces.heweather.com.interfacesmodule.view.HeConfig
-import interfaces.heweather.com.interfacesmodule.view.HeWeather
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v4.content.ContextCompat as ContextCompat1
+import com.baidu.tts.client.SpeechSynthesizer
+import com.baidu.tts.client.SpeechSynthesizerListener
+import com.baidu.tts.client.TtsMode
 
 
 class MainActivity : AppCompatActivity(){
@@ -51,8 +45,6 @@ class MainActivity : AppCompatActivity(){
     private val type by lazy { object : TypeToken<ArrayList<FragmentWeatherData>>() {}.type }
 
     private val prefs by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
-
-    private val editor by lazy {  prefs.edit() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +71,8 @@ class MainActivity : AppCompatActivity(){
             window.statusBarColor = Color.TRANSPARENT
         }
 
+
+
     }
 
     private fun init(){
@@ -101,26 +95,16 @@ class MainActivity : AppCompatActivity(){
      * 权限判断
      */
     private fun permissionJudge(){
+        val permissions = arrayOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
         val permissionList = ArrayList<String>()
-        if (ContextCompat1.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-        if (ContextCompat1.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_STATE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionList.add(Manifest.permission.READ_PHONE_STATE)
-        }
-        if (ContextCompat1.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        for (p in permissions){
+            if (ContextCompat1.checkSelfPermission(this, p) != PackageManager.PERMISSION_GRANTED){
+                permissionList.add(p)
+            }
         }
         if (permissionList.isNotEmpty()) {
             val permissions = permissionList.toTypedArray()
@@ -180,7 +164,8 @@ class MainActivity : AppCompatActivity(){
                 startActivityForResult(intent,1)
             }
             R.id.settings -> {
-
+                val intent = Intent(this, SettingActivity::class.java)
+                startActivityForResult(intent,2)
             }
             R.id.details -> {
 
@@ -194,17 +179,19 @@ class MainActivity : AppCompatActivity(){
             1 -> {
                 if (resultCode == Activity.RESULT_OK) {
                     if (data!!.getBooleanExtra("flag", false)) {
-                        arrayList.clear()
+
+                        for (i in arrayList.size - 1 downTo 1)
+                            arrayList.removeAt(i)
+
                         // 当CityManageActivity的列表点击事件触发时
                         // 取出储存器的数据
-                        var k = gson.fromJson<ArrayList<FragmentWeatherData>>(prefs.getString("dataList", null), type)
-                        arrayList.add(WeatherFragment())
+                        var k = gson.fromJson<ArrayList<FragmentWeatherData>>(
+                            prefs.getString("dataList", null), type)
                         // 将储存器的数据取出添加相应碎片
 
                         for (i in 1 until k.size) {
                             arrayList.add(WeatherFragment(k[i].city!!))
                         }
-
                         //刷新适配器
                         adapter?.notifyDataSetChanged()
                     }
@@ -212,6 +199,9 @@ class MainActivity : AppCompatActivity(){
                     //跳转页面
                     main_ViewPager.currentItem = data!!.getIntExtra("choose", 0)
                 }
+            }
+            2 -> {
+
             }
         }
     }

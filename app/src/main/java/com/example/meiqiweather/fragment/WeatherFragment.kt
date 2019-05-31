@@ -36,7 +36,6 @@ import kotlinx.android.synthetic.main.weather_fragment.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-@SuppressLint("ValidFragment")
 class WeatherFragment() : Fragment() ,AMapLocationListener{
 
     var mCity: String? = null
@@ -50,11 +49,11 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
     private var isInit = false
     private var isLoad = false
 
+    @SuppressLint("ValidFragment")
     constructor(cityCode: String): this(){
         this.cityCode = cityCode
+        assignment(cityCode)
     }
-
-    private var positioningCode: String? = null
 
     private val type by lazy { object : TypeToken<Mweather>() {}.type }
 
@@ -81,6 +80,7 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         override fun handleMessage(msg: Message?) {
             mWeather = gson.fromJson<Mweather>(prefs.getString(msg!!.obj.toString(), null), type)
             updateComponent(mWeather!!)
+            isCanLoadData()
         }
     }
 
@@ -119,9 +119,7 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         }
         for (i in 1 until dayText.size)
             dayText[i].text = week(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)+i)
-
         v.toolbar.title = ""
-        //设定位
 
         isInit = true
         isCanLoadData()
@@ -163,14 +161,19 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
 
           if (cityCode != null){
               storageJudgment(cityCode!!)
-              assignment(cityCode!!)
           } else {
-              mlocationClient = AMapLocationClient(activity)
-              mLocationOption = AMapLocationClientOption()
-              mlocationClient?.setLocationListener(this)
-              mLocationOption?.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
-              mlocationClient?.setLocationOption(mLocationOption)
-              mlocationClient?.startLocation()
+              v.toolbar.setNavigationIcon(R.mipmap.ic_locate_city)
+              var code = prefs.getString("adCode", null)
+              if (code != null){
+                  storageJudgment(code)
+              }else {
+                  mlocationClient = AMapLocationClient(activity)
+                  mLocationOption = AMapLocationClientOption()
+                  mlocationClient?.setLocationListener(this)
+                  mLocationOption?.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
+                  mlocationClient?.setLocationOption(mLocationOption)
+                  mlocationClient?.startLocation()
+              }
           }
 
     }
@@ -210,11 +213,10 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         Thread(Runnable {
             //执行刷新代码
             if (cityCode != null){
-                cityCode?.let { assignment(it) }
                 cityCode?.let { updateWeather(it) }
             }else{
                 mlocationClient?.startLocation()
-                positioningCode?.let { updateWeather(it) }
+                prefs.getString("adCode", null)?.let { updateWeather(it) }
             }
             activity?.runOnUiThread{
                 v.main_SwipeRefresh.isRefreshing = false
@@ -229,12 +231,11 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
     override fun onLocationChanged(p0: AMapLocation?) {
         if (p0 != null){
             if (p0.errorCode == 0){
-                positioningCode = p0.adCode
                 //传入城市码
-                assignment(p0.adCode)
                 storageJudgment(p0.adCode)
-                v.toolbar.setNavigationIcon(R.mipmap.ic_locate_city)
                 //停止定位
+                editor.putString("adCode", p0.adCode)
+                editor.apply()
                 mlocationClient?.stopLocation()
             }
         }else{
@@ -262,6 +263,10 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         HeWeather.getWeather(context, city, object : HeWeather.OnResultWeatherDataListBeansListener {
             override fun onSuccess(weather: Weather?) {
                 if (weather != null) {
+
+                    mTmp = weather.now?.tmp + "°"
+                    mHappening = weather.now?.cond_txt
+                    mCity = weather.basic?.location
 
                     var now = Now(weather.now.tmp, weather.now.cond_txt,
                         weather.now.cond_code, weather.now.hum, weather.now.pres,
@@ -294,10 +299,6 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
                     editor.putString(city, json)
                     editor.apply()
 
-
-//                    editor.putString("dataList", gson.toJson(mData))
-//                    editor.apply()
-
                     var message = Message()
                     message.obj = city
                     handler.handleMessage(message)
@@ -311,9 +312,12 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateComponent(mWeather: Mweather){
-        //设置当前温度和标题栏定位地址
+    private fun updateComponent(mWeather: Mweather, type: Int = 1){
+        mTmp = mWeather.now?.tmp + "°"
+        mHappening = mWeather.now?.cond_txt
+        mCity = mWeather.basic?.location
 
+        //设置当前温度和标题栏定位地址
         v.fragment_temp.text = mWeather.now?.tmp + "°"
         v.fragment_happening.text = mWeather.now?.cond_txt
         v.max_temp.text = "↟ " + mWeather.daily_forecast[0].tmp_max + "℃"
@@ -385,12 +389,13 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         v.fragment_linear.visibility = View.VISIBLE
         v.weather_relative.visibility = View.VISIBLE
 
-        activity!!.frame.removeAllViews()
-        var dwv = DynamicWeatherView(context!!)
-        dwv.mType = choose(dwv, context!!, mWeather.cond_code)
-        activity!!.frame.addView(dwv)
 
-//        activity!!.dw_view.mType = choose(activity!!.dw_view, context!!, mWeather.cond_code)
+        if (type == 1) {
+            activity!!.frame.removeAllViews()
+            var dwv = DynamicWeatherView(context!!)
+            dwv.mType = choose(dwv, context!!, mWeather.cond_code)
+            activity!!.frame.addView(dwv)
+        }
 
     }
 
