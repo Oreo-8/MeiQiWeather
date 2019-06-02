@@ -1,5 +1,6 @@
 package com.example.meiqiweather
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Canvas
@@ -30,10 +31,9 @@ import kotlinx.android.synthetic.main.activity_add_city.*
 import kotlinx.android.synthetic.main.activity_city_manage.*
 import kotlinx.android.synthetic.main.activity_main.*
 
-
 class CityManageActivity : AppCompatActivity() {
 
-    private val gson = Gson()
+    private val gson  by lazy { Gson() }
 
     private var flag = false
 
@@ -56,6 +56,7 @@ class CityManageActivity : AppCompatActivity() {
 
         val lp = cityManage_toolbar.layoutParams as LinearLayout.LayoutParams
         lp.setMargins(0, Resource.getStatusBarHeight(this), 0, 0)
+
         setSupportActionBar(cityManage_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -71,11 +72,18 @@ class CityManageActivity : AppCompatActivity() {
             startActivityForResult(Intent(this, AddCityActivity::class.java),2)
         }
 
-        mData = if (prefs.getString("dataList", null) != null){
-            gson.fromJson<ArrayList<FragmentWeatherData>>(prefs.getString("dataList", null), type)
-        } else{
+        mData = if(intent.getBooleanExtra("boolean", false)){
+            Log.d("kgood", "h1")
             intent.getSerializableExtra("data") as ArrayList<FragmentWeatherData>
+        } else {
+            Log.d("kgood", "h2")
+            if (prefs.getString("dataList", null) != null){
+                gson.fromJson<ArrayList<FragmentWeatherData>>(prefs.getString("dataList", null), type)
+            } else{
+                intent.getSerializableExtra("data") as ArrayList<FragmentWeatherData>
+            }
         }
+
 
         //城市管理列表
         val layoutManager = LinearLayoutManager(this)
@@ -116,10 +124,10 @@ class CityManageActivity : AppCompatActivity() {
                 if (resultCode == Activity.RESULT_OK){
                     // 当 AddCityActivity 的列表点击事件触发时
                     // 取出 AddCityActivity 传过来的数据
-                    var city =  data!!.getStringExtra("city")
-                    HeWeather.getWeatherNow(this, city, object : HeWeather.OnResultWeatherNowBeanListener{
+                    var city = data!!.getStringExtra("city")
+                    HeWeather.getWeatherNow(this, city, object : HeWeather.OnResultWeatherNowBeanListener {
                         override fun onSuccess(p0: Now?) {
-                            if (p0 != null){
+                            if (p0 != null) {
                                 flag = true
                                 // 把数据增到  mData
                                 mData.add(FragmentWeatherData(city, "${p0.now.tmp}°", p0.now.cond_txt))
@@ -135,7 +143,6 @@ class CityManageActivity : AppCompatActivity() {
                         override fun onError(p0: Throwable?) = p0!!.printStackTrace()
 
                     })
-
                 }
             }
         }

@@ -17,7 +17,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
-import com.baidu.tts.client.SpeechError
 import com.example.meiqiweather.adapter.ViewPagerAdapter
 import com.example.meiqiweather.data.FragmentWeatherData
 import com.example.meiqiweather.data.Resource
@@ -27,10 +26,6 @@ import com.google.gson.reflect.TypeToken
 import interfaces.heweather.com.interfacesmodule.view.HeConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import android.support.v4.content.ContextCompat as ContextCompat1
-import com.baidu.tts.client.SpeechSynthesizer
-import com.baidu.tts.client.SpeechSynthesizerListener
-import com.baidu.tts.client.TtsMode
-
 
 class MainActivity : AppCompatActivity(){
 
@@ -71,8 +66,6 @@ class MainActivity : AppCompatActivity(){
             window.statusBarColor = Color.TRANSPARENT
         }
 
-
-
     }
 
     private fun init(){
@@ -84,7 +77,7 @@ class MainActivity : AppCompatActivity(){
         if (prefs.getString("dataList", null) != null){
             var k = gson.fromJson<ArrayList<FragmentWeatherData>>(prefs.getString("dataList", null), type)
             for (i in 1 until  k.size)
-                arrayList.add(WeatherFragment(k[i].city!!))
+                arrayList.add(WeatherFragment(k[i].city!!, i))
         }
         adapter = ViewPagerAdapter(supportFragmentManager, arrayList)
         main_ViewPager.adapter = adapter
@@ -147,19 +140,22 @@ class MainActivity : AppCompatActivity(){
             R.id.city -> {
                 //进入城市管理页面
                 val intent = Intent(this, CityManageActivity::class.java)
+                var boolean = false
                 //清空城市数据列表
                 array.clear()
                 //循环碎片列表
                 for (i in arrayList){
                     val k = (i as WeatherFragment)
                     //取出碎片城市天气信息列表数据,增加到管理城市列表
-                    if (k.mWeather != null){
+                    boolean = if (k.mWeather != null){
                         array.add(FragmentWeatherData(k.mWeather?.basic?.location, k.mWeather?.now?.tmp + "°", k.mWeather?.now?.cond_txt))
+                        true
                     } else {
-                        array.add(FragmentWeatherData(k.mCity, k.mTmp, k.mHappening))
+                        false
                     }
                 }
                 //传入 管理城市列表数据给 CityManageActivity
+                intent.putExtra("boolean", boolean)
                 intent.putExtra("data", array)
                 startActivityForResult(intent,1)
             }
@@ -180,8 +176,10 @@ class MainActivity : AppCompatActivity(){
                 if (resultCode == Activity.RESULT_OK) {
                     if (data!!.getBooleanExtra("flag", false)) {
 
-                        for (i in arrayList.size - 1 downTo 1)
-                            arrayList.removeAt(i)
+//                        for (i in arrayList.size - 1 downTo 1)
+//                            arrayList.removeAt(i)
+                        arrayList.clear()
+                        arrayList.add(WeatherFragment())
 
                         // 当CityManageActivity的列表点击事件触发时
                         // 取出储存器的数据
@@ -190,7 +188,7 @@ class MainActivity : AppCompatActivity(){
                         // 将储存器的数据取出添加相应碎片
 
                         for (i in 1 until k.size) {
-                            arrayList.add(WeatherFragment(k[i].city!!))
+                            arrayList.add(WeatherFragment(k[i].city!!, i))
                         }
                         //刷新适配器
                         adapter?.notifyDataSetChanged()

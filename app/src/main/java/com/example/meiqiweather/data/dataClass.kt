@@ -4,7 +4,7 @@ import java.io.Serializable
 
 data class Data(val dateTitle: String, val dateImage: Int, val dateBackground: Int)
 
-data class FragmentWeatherData(val city: String?, val tmp: String?, val happening: String?): Serializable
+data class FragmentWeatherData(val city: String?, var tmp: String?, var happening: String?): Serializable
 
 data class Elements(val up: Int, val down: Int)
 

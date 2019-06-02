@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
@@ -13,8 +14,12 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.Toast
 import com.example.meiqiweather.adapter.AddCityAdapter
+import com.example.meiqiweather.data.FragmentWeatherData
 import com.example.meiqiweather.data.Resource
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import interfaces.heweather.com.interfacesmodule.bean.Lang
 import interfaces.heweather.com.interfacesmodule.bean.basic.Basic
 import interfaces.heweather.com.interfacesmodule.bean.search.Search
@@ -22,6 +27,13 @@ import interfaces.heweather.com.interfacesmodule.view.HeWeather
 import kotlinx.android.synthetic.main.activity_add_city.*
 
 class AddCityActivity : AppCompatActivity() {
+
+    private val prefs by lazy { PreferenceManager.
+        getDefaultSharedPreferences(this) }
+
+    private val type by lazy { object : TypeToken<ArrayList<FragmentWeatherData>>() {}.type }
+
+    private val gson  by lazy { Gson() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,12 +111,20 @@ class AddCityActivity : AppCompatActivity() {
 
     val itemClickListener = object: AddCityAdapter.ItemClickListener{
         override fun onItemClickListener(basic: Basic) {
-            val intent = Intent()
-            //传当前点击项的城市地址到 CityManageActivity
-            intent.putExtra("city", basic.location)
-            setResult(Activity.RESULT_OK, intent)
-            //结束活动
-            finish()
+            var k = gson.fromJson<ArrayList<FragmentWeatherData>>(
+                prefs.getString("dataList", null),
+                type
+            )
+            if (k?.size == 8){
+                Toast.makeText(this@AddCityActivity, "最多只能添加8个城市", Toast.LENGTH_LONG).show()
+            } else {
+                val intent = Intent()
+                //传当前点击项的城市地址到 CityManageActivity
+                intent.putExtra("city", basic.location)
+                setResult(Activity.RESULT_OK, intent)
+                //结束活动
+                finish()
+            }
         }
     }
 

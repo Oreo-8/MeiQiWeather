@@ -38,21 +38,17 @@ import kotlin.collections.ArrayList
 
 class WeatherFragment() : Fragment() ,AMapLocationListener{
 
-    var mCity: String? = null
-
-    var mTmp: String? = null
-
-    var mHappening: String? = null
-
     private var cityCode: String? = null
+
+    private var mId: Int = 0
 
     private var isInit = false
     private var isLoad = false
 
     @SuppressLint("ValidFragment")
-    constructor(cityCode: String): this(){
+    constructor(cityCode: String, id: Int): this(){
         this.cityCode = cityCode
-        assignment(cityCode)
+        this.mId = id
     }
 
     private val type by lazy { object : TypeToken<Mweather>() {}.type }
@@ -191,32 +187,17 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         isLoad = false
     }
 
-    private fun assignment(city: String){
-        HeWeather.getWeather(context, city, object : HeWeather.OnResultWeatherDataListBeansListener {
-            override fun onSuccess(weather: Weather?) {
-                if (weather != null) {
-                    mTmp = weather.now?.tmp + "°"
-                    mHappening = weather.now?.cond_txt
-                    mCity = weather.basic?.location
-                }
-            }
-
-            override fun onError(p0: Throwable?) = p0!!.printStackTrace()
-        })
-    }
-
-
     /**
      * 刷新天气
      */
-    private fun refreshWeather(){
+    fun refreshWeather(){
         Thread(Runnable {
             //执行刷新代码
             if (cityCode != null){
-                cityCode?.let { updateWeather(it) }
+                cityCode?.let { updateWeather(it,1) }
             }else{
                 mlocationClient?.startLocation()
-                prefs.getString("adCode", null)?.let { updateWeather(it) }
+                prefs.getString("adCode", null)?.let { updateWeather(it,1) }
             }
             activity?.runOnUiThread{
                 v.main_SwipeRefresh.isRefreshing = false
@@ -245,6 +226,9 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         }
     }
 
+    /**
+     *  判断有无缓存 如果有缓存就读取缓存信息，无则去获取天气信息
+     */
     private fun storageJudgment(city: String){
         mWeather = gson.fromJson<Mweather>(prefs.getString(city, null), type)
         if (mWeather == null) {
@@ -257,16 +241,12 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
     }
 
     /**
-     * 获取天气信息更新组件
+     * 获取天气信息并储存
      */
-    private fun updateWeather(city: String) {
+    private fun updateWeather(city: String, type: Int = 0) {
         HeWeather.getWeather(context, city, object : HeWeather.OnResultWeatherDataListBeansListener {
             override fun onSuccess(weather: Weather?) {
                 if (weather != null) {
-
-                    mTmp = weather.now?.tmp + "°"
-                    mHappening = weather.now?.cond_txt
-                    mCity = weather.basic?.location
 
                     var now = Now(weather.now.tmp, weather.now.cond_txt,
                         weather.now.cond_code, weather.now.hum, weather.now.pres,
@@ -292,12 +272,25 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
                         lifestyle.add(Lifestyle(i.type, i.txt, i.brf))
                     }
 
-
                     val mWeather = Mweather(now, daily_forecast, basic, hourly, lifestyle, sun, weather.now.cond_code)
 
                     var json = gson.toJson(mWeather)
                     editor.putString(city, json)
                     editor.apply()
+
+                    if (type == 1) {
+                        var k = gson.fromJson<ArrayList<FragmentWeatherData>>(
+                            prefs.getString("dataList", null),
+                            object : TypeToken<ArrayList<FragmentWeatherData>>() {}.type
+                        )
+                        k[mId].happening = weather.now?.cond_txt
+                        k[mId].tmp = weather.now?.tmp + "°"
+
+                        var json = gson.toJson(k)
+                        editor.putString("dataList", json)
+                        editor.apply()
+                    }
+
 
                     var message = Message()
                     message.obj = city
@@ -311,11 +304,11 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
 
     }
 
+    /**
+     * 读取储存更新组件
+     */
     @SuppressLint("SetTextI18n")
     private fun updateComponent(mWeather: Mweather, type: Int = 1){
-        mTmp = mWeather.now?.tmp + "°"
-        mHappening = mWeather.now?.cond_txt
-        mCity = mWeather.basic?.location
 
         //设置当前温度和标题栏定位地址
         v.fragment_temp.text = mWeather.now?.tmp + "°"
@@ -388,7 +381,6 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
         //显示组件
         v.fragment_linear.visibility = View.VISIBLE
         v.weather_relative.visibility = View.VISIBLE
-
 
         if (type == 1) {
             activity!!.frame.removeAllViews()
