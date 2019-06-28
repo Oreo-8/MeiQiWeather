@@ -4,7 +4,7 @@ import java.io.Serializable
 
 data class Data(val dateTitle: String, val dateImage: Int, val dateBackground: Int)
 
-data class FragmentWeatherData(val city: String?, var tmp: String?, var happening: String?): Serializable
+data class FragmentWeatherData(val city: String?, var tmp: String?, var happening: String?, var condCode: String?): Serializable
 
 data class Elements(val up: Int, val down: Int)
 
@@ -22,7 +22,10 @@ data class Lifestyle(val type: String, val txt: String, val brf: String): Serial
 
 data class Sun(val sr: String, val ss: String): Serializable
 
+data class UpTime(var year: Int, var month: Int, var day: Int, var time: Int): Serializable
+
 data class Mweather(var now: Now? = null, var daily_forecast: ArrayList<DailyForecast> = ArrayList(),
                     var basic: Basic? = null, var hourly: ArrayList<Hourly>  = ArrayList(),
-                   var lifestyle: ArrayList<Lifestyle> = ArrayList(), var sun: Sun? = null, var cond_code: String): Serializable
+                   var lifestyle: ArrayList<Lifestyle> = ArrayList(), var sun: Sun? = null,
+                    var cond_code: String, var upTime: UpTime): Serializable
 

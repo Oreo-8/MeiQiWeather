@@ -6,6 +6,7 @@
     <solid android:color="#80ACACAC" />
 
     <!-- 圆角半径是高度的一般就是一个圆弧了 -->
-    <corners android:radius="6dp" />
+    <corners android:radius="10dp" />
+
 
 </shape>

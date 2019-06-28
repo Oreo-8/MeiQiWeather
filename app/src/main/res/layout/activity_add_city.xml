@@ -3,7 +3,7 @@
         android:orientation="vertical"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:background="#494949"
+        android:background="#00437A"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".AddCityActivity">
@@ -23,13 +23,11 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <View android:layout_width="match_parent" android:layout_height="1dp"
-          android:background="#000000" android:layout_marginLeft="10dp" android:layout_marginRight="10dp"/>
-
     <android.support.v7.widget.RecyclerView
+            android:background="#fff"
             android:id="@+id/add_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
 
 
 </LinearLayout>

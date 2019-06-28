@@ -8,13 +8,18 @@
         app:showAsAction="never" />
 
     <item
+            android:id="@+id/preview"
+            android:title="天气预览"
+            app:showAsAction="never"/>
+
+    <item
         android:id="@+id/settings"
         android:title="设置"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
 
     <item
             android:id="@+id/details"
-            android:title="详情"
+            android:title="关于"
             app:showAsAction="never" />
 
 </menu>

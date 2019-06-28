@@ -4,9 +4,18 @@
     <color name="colorPrimaryDark">#03A9F4</color>
     <color name="colorAccent">#000000</color>
 
-    <color name="rain_sky_day_start">#2b4151</color>
-    <color name="rain_sky_day_end">#316081</color>
+    <color name="rain_sky_start">#002746</color>
+    <color name="rain_sky_end">#00437A</color>
 
-    <color name="rain_sky_night_start">#00437A</color>
-    <color name="rain_sky_night_end">#00437A</color>
+    <color name="snow_sky_start">#76C2FF</color>
+    <color name="snow_sky_end">#BDBDBD</color>
+
+    <color name="overcast_sky_start">#465D79</color>
+    <color name="overcast_sky_end">#BDBDBD</color>
+
+    <color name="clear_sky_start">#03A9F4</color>
+    <color name="clear_sky_end">#0385BD</color>
+
+    <color name="cloudy_sky_start">#026297</color>
+    <color name="cloudy_sky_end">#3B495F</color>
 </resources>

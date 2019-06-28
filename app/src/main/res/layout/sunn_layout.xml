@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:sun="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:gravity="center"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="日出日落"/>
+
+    <com.example.meiqiweather.customizeView.SunView
+            android:id="@+id/sv"
+            android:layout_margin="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            sun:svMainColor="#FE8109"
+            sun:svTrackColor="#FE8109"
+            sun:svSunColor="#FED300"
+            sun:svSunRadius="9dp"
+            sun:svTrackWidth="1dp"
+            sun:svTextSize="10sp"
+            sun:svTextOffset="20dp"
+            sun:svPadding="10dp"/>
+
+</LinearLayout>

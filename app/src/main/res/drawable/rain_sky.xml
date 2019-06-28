@@ -3,6 +3,7 @@
 
     <gradient
             android:angle="270"
-            android:endColor="@color/rain_sky_night_end"
-            android:startColor="@color/rain_sky_night_start" />
+            android:endColor="@color/rain_sky_end"
+            android:startColor="@color/rain_sky_start" />
+
 </shape>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00A8F9"
+        android:orientation="vertical"
+        tools:context=".DetailActivity">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/detail_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/colorPrimary"/>
+
+    <RelativeLayout
+            android:background="#B4F5FF"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        <ImageView
+                android:id="@+id/ic_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="120dp"
+                android:src="@drawable/ic_image"/>
+
+        <TextView
+                android:id="@+id/t1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="#4B4848"
+                android:textSize="17sp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/ic_image"
+                android:text="美琪天气 V1.0.0"/>
+
+        <TextView
+                android:id="@+id/t2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/t1"
+                android:layout_margin="10dp"
+                android:text="@string/signup_agreeTerms"/>
+
+        <TextView
+                android:id="@+id/t3"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:text="天气信息由和风天气提供"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+    </RelativeLayout>
+
+</LinearLayout>

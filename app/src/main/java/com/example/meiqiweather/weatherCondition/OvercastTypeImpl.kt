@@ -38,7 +38,7 @@ class OvercastTypeImpl: BaseType {
     }
 
     override fun generate() {
-        mBackground = ContextCompat.getDrawable(mContext!!, R.drawable.rain_sky_night)
+        mBackground = ContextCompat.getDrawable(mContext!!, R.drawable.overcast_sky)
         mBackground?.setBounds(0, 0, mWidth, mHeight)
         for (i in 0..5) {
             mRains?.add(

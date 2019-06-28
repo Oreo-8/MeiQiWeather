@@ -2,10 +2,12 @@ package com.example.meiqiweather
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
@@ -97,7 +99,7 @@ class AddCityActivity : AppCompatActivity() {
                     val layoutManager = LinearLayoutManager(this@AddCityActivity)
                     add_list.layoutManager = layoutManager
                     if (p0.basic != null){
-                        var adapter = AddCityAdapter(p0.basic)
+                        val adapter = AddCityAdapter(p0.basic)
                         add_list.adapter = adapter
                         //列表回调事件
                         adapter.setOnItemClickListener(itemClickListener)
@@ -111,7 +113,7 @@ class AddCityActivity : AppCompatActivity() {
 
     val itemClickListener = object: AddCityAdapter.ItemClickListener{
         override fun onItemClickListener(basic: Basic) {
-            var k = gson.fromJson<ArrayList<FragmentWeatherData>>(
+            val k = gson.fromJson<ArrayList<FragmentWeatherData>>(
                 prefs.getString("dataList", null),
                 type
             )

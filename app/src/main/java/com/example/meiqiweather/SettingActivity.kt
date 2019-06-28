@@ -36,4 +36,9 @@ class SettingActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        finish()
+    }
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.meiqiweather">
-
     <!-- 用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!-- 用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
@@ -17,6 +16,7 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
             android:allowBackup="true"
@@ -25,6 +25,14 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".DetailActivity"
+                  android:label="关于">
+        </activity>
+
+        <service
+                android:name=".service.WeatherJob"
+                android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
         <service
                 android:name=".service.WeatherService"
                 android:enabled="true"

@@ -22,7 +22,7 @@
                     android:background="#00FFFFFF"
                     android:id="@+id/collapsing_toolbar"
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                    app:contentScrim="#00437A"
+                    app:contentScrim="#00FFFFFF"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     app:titleEnabled="false"
                     android:layout_width="match_parent"
@@ -129,7 +129,10 @@
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.widget.NestedScrollView
+                android:id="@+id/nsv"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_gravity="fill_vertical"
+                android:layout_marginBottom="?attr/actionBarSize"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -162,6 +165,10 @@
                     <View style="@style/weather_view1" />
 
                     <include android:id="@+id/air_layout" layout="@layout/air_layout"  android:visibility="gone"/>
+
+                    <include android:id="@+id/sun_layout" layout="@layout/sunn_layout" android:visibility="gone"/>
+
+                    <View style="@style/weather_view1" />
 
                     <include android:id="@+id/life_index_layout" layout="@layout/life_index_layout" />
 

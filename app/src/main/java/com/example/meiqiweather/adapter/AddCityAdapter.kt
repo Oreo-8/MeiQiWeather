@@ -1,12 +1,17 @@
 package com.example.meiqiweather.adapter
 
+import android.content.res.Resources
+import android.graphics.BitmapFactory
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.meiqiweather.R
+import com.example.meiqiweather.data.Resource
 import interfaces.heweather.com.interfacesmodule.bean.basic.Basic
 import kotlinx.android.synthetic.main.addcity_item.view.*
+import kotlinx.android.synthetic.main.city_item.view.*
 
 class AddCityAdapter(private val data: List<Basic>): RecyclerView.Adapter<AddCityAdapter.ViewHolder>() {
 

@@ -1,6 +1,5 @@
 package com.example.meiqiweather
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Canvas
@@ -12,24 +11,18 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.Toast
 import com.example.meiqiweather.adapter.CityAdapter
 import com.example.meiqiweather.data.FragmentWeatherData
 import com.example.meiqiweather.data.Resource
-import com.example.meiqiweather.fragment.WeatherFragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import interfaces.heweather.com.interfacesmodule.bean.weather.now.Now
 import interfaces.heweather.com.interfacesmodule.view.HeWeather
-import kotlinx.android.synthetic.main.activity_add_city.*
 import kotlinx.android.synthetic.main.activity_city_manage.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 class CityManageActivity : AppCompatActivity() {
 
@@ -72,23 +65,19 @@ class CityManageActivity : AppCompatActivity() {
             startActivityForResult(Intent(this, AddCityActivity::class.java),2)
         }
 
-        mData = if(intent.getBooleanExtra("boolean", false)){
-            Log.d("kgood", "h1")
+
+        mData = if (prefs.getString("dataList", null) != null){
+            gson.fromJson<ArrayList<FragmentWeatherData>>(prefs.getString("dataList", null), type)
+        } else{
             intent.getSerializableExtra("data") as ArrayList<FragmentWeatherData>
-        } else {
-            Log.d("kgood", "h2")
-            if (prefs.getString("dataList", null) != null){
-                gson.fromJson<ArrayList<FragmentWeatherData>>(prefs.getString("dataList", null), type)
-            } else{
-                intent.getSerializableExtra("data") as ArrayList<FragmentWeatherData>
-            }
         }
+
 
 
         //城市管理列表
         val layoutManager = LinearLayoutManager(this)
         recycler_city.layoutManager = layoutManager
-        adapter = CityAdapter(mData)
+        adapter = CityAdapter(mData, resources)
         recycler_city.adapter = adapter
         touchHelper.attachToRecyclerView(recycler_city)
 
@@ -124,13 +113,14 @@ class CityManageActivity : AppCompatActivity() {
                 if (resultCode == Activity.RESULT_OK){
                     // 当 AddCityActivity 的列表点击事件触发时
                     // 取出 AddCityActivity 传过来的数据
-                    var city = data!!.getStringExtra("city")
+                    val city = data!!.getStringExtra("city")
                     HeWeather.getWeatherNow(this, city, object : HeWeather.OnResultWeatherNowBeanListener {
                         override fun onSuccess(p0: Now?) {
                             if (p0 != null) {
                                 flag = true
                                 // 把数据增到  mData
-                                mData.add(FragmentWeatherData(city, "${p0.now.tmp}°", p0.now.cond_txt))
+                                mData.add(FragmentWeatherData(city, "${p0.now.tmp}°"
+                                    , p0.now.cond_txt, p0.now.cond_code))
                                 // 重新储存数据
                                 val json = gson.toJson(mData)
                                 editor.putString("dataList", json)
@@ -156,7 +146,7 @@ class CityManageActivity : AppCompatActivity() {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, p1: Int) {
-            var pos = viewHolder.adapterPosition
+            val pos = viewHolder.adapterPosition
             if (pos != 0) {
                 flag = true
                 editor.remove(mData[pos].city)

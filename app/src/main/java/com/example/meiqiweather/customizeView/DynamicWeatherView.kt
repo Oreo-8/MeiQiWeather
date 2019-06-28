@@ -61,7 +61,6 @@ class DynamicWeatherView: SurfaceView, SurfaceHolder.Callback  {
         mDrawThread = DrawThread()
         mDrawThread?.isRunning = true
         mDrawThread?.start()
-
     }
 
     /**

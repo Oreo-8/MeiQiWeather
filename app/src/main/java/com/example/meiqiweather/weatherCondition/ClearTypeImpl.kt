@@ -6,14 +6,14 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import com.example.meiqiweather.R
+import android.graphics.Bitmap
 import com.example.meiqiweather.customizeView.BaseType
 import com.example.meiqiweather.customizeView.DynamicWeatherView
-import android.graphics.Bitmap
 
 /**
  * 晴天
  */
-class ClearTypeImpl: BaseType{
+class ClearTypeImpl: BaseType {
 
     // 背景
     private var mBackground: Drawable? = null
@@ -32,7 +32,7 @@ class ClearTypeImpl: BaseType{
     }
 
     override fun generate() {
-        mBackground = ContextCompat.getDrawable(mContext!!, R.drawable.rain_sky_night)
+        mBackground = ContextCompat.getDrawable(mContext!!, R.drawable.clear_sky)
         mBackground?.setBounds(0, 0, mWidth, mHeight)
     }
 
