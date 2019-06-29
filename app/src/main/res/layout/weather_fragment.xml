@@ -153,22 +153,36 @@
 
                     <include android:id="@+id/line_layout" layout="@layout/line_layout"/>
 
-                    <View style="@style/weather_view1" />
+                    <View style="@style/weather_view1"/>
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="逐3小时预报"/>
+
+                    <TextView
+                            android:id="@+id/text_forecast"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" android:text="逐3小时预报"/>
 
                     <android.support.v7.widget.RecyclerView
                             android:id="@+id/fragment_recycler"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
-                    
-                    <View style="@style/weather_view1" />
+
+                    <View android:id="@+id/line_1"  style="@style/weather_view1"/>
+
 
                     <include android:id="@+id/air_layout" layout="@layout/air_layout"  android:visibility="gone"/>
 
-                    <include android:id="@+id/sun_layout" layout="@layout/sunn_layout" android:visibility="gone"/>
+                    <LinearLayout
+                            android:id="@+id/sun"
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
 
-                    <View style="@style/weather_view1" />
+                        <include android:id="@+id/sun_layout" layout="@layout/sunn_layout" android:visibility="gone"/>
+
+                        <View style="@style/weather_view1" />
+
+                    </LinearLayout>
 
                     <include android:id="@+id/life_index_layout" layout="@layout/life_index_layout" />
 

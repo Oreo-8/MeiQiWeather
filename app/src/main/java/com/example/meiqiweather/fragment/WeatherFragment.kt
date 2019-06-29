@@ -58,6 +58,8 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
 
     private val typeS by lazy { object : TypeToken<Mweather>() {}.type }
 
+    private val typeSS by lazy { object : TypeToken<SettingStatus>() {}.type }
+
     private val gson by lazy {  Gson() }
 
     private val up by lazy { intArrayOf(1,1,1,1,1,1) }
@@ -332,6 +334,7 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
     @SuppressLint("SetTextI18n", "InflateParams")
     private fun updateComponent(mWeather: Mweather, type: Int = 1){
 
+
         //设置当前温度和标题栏定位地址
         v.fragment_temp.text = mWeather.now?.tmp + "°"
         v.fragment_happening.text = mWeather.now?.cond_txt
@@ -443,6 +446,8 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
             dwv.mType = (choose(dwv, context!!, mWeather.cond_code))
             activity!!.frame.addView(dwv)
         }
+
+        settingJudgment()
     }
 
     //设置星期String
@@ -462,6 +467,26 @@ class WeatherFragment() : Fragment() ,AMapLocationListener{
             return mNetworkInfo.isConnected
         }
         return false
+    }
+
+    fun settingJudgment(){
+        val  ss = gson.fromJson<SettingStatus>(prefs.getString("SettingStatus", null), typeSS)
+        if (ss != null){
+            if (ss.forecast){
+                v.text_forecast.visibility = View.VISIBLE
+                v.fragment_recycler.visibility = View.VISIBLE
+                v.line_1.visibility = View.VISIBLE
+            } else {
+                v.text_forecast.visibility = View.GONE
+                v.fragment_recycler.visibility = View.GONE
+                v.line_1.visibility = View.GONE
+            }
+            if (ss.sun){
+                v.sun_layout.visibility = View.VISIBLE
+            } else {
+                v.sun_layout.visibility = View.GONE
+            }
+        }
     }
 
 }

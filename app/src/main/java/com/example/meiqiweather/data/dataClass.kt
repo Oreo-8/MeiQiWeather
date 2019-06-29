@@ -29,3 +29,5 @@ data class Mweather(var now: Now? = null, var daily_forecast: ArrayList<DailyFor
                    var lifestyle: ArrayList<Lifestyle> = ArrayList(), var sun: Sun? = null,
                     var cond_code: String, var upTime: UpTime): Serializable
 
+data class SettingStatus(var forecast: Boolean = true, var sun: Boolean = true)
+

@@ -285,7 +285,9 @@ class MainActivity : AppCompatActivity(){
                 }
             }
             2 -> {
-
+                if (resultCode == Activity.RESULT_OK) {
+                    (arrayList[main_ViewPager.currentItem] as WeatherFragment).settingJudgment()
+                }
             }
         }
     }
